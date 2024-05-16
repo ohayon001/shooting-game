@@ -60,6 +60,9 @@ document.addEventListener('DOMContentLoaded', () => {
         moveShip();
         moveBullets();
         requestAnimationFrame(update);
+
+        // ゲームパッドの状態をチェック
+        checkGamepad();
     }
 
     function keyDown(e) {
@@ -86,12 +89,47 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ゲームパッドのボタンとスティックをチェックする関数
+    function checkGamepad() {
+        const gamepad = navigator.getGamepads()[0];
+        if (gamepad) {
+            // 左スティックの入力をチェック
+            const leftStickX = gamepad.axes[0];
+            if (leftStickX > 0.1) {
+                ship.dx = ship.speed;
+            } else if (leftStickX < -0.1) {
+                ship.dx = -ship.speed;
+            } else {
+                ship.dx = 0;
+            }
+
+            // ボタンの入力をチェック (ここではボタン0を射撃に対応させる)
+            if (gamepad.buttons[0].pressed) {
+                if (!shooting) {
+                    shoot();
+                    shooting = true;
+                }
+            } else {
+                shooting = false;
+            }
+        }
+    }
+
     document.addEventListener('keydown', keyDown);
     document.addEventListener('keyup', keyUp);
     document.addEventListener('keypress', (e) => {
         if (e.key === ' ') {
             shoot();
         }
+    });
+
+    let shooting = false;
+    window.addEventListener('gamepadconnected', (e) => {
+        console.log('ゲームパッドが接続されました:', e.gamepad);
+    });
+
+    window.addEventListener('gamepaddisconnected', (e) => {
+        console.log('ゲームパッドが切断されました:', e.gamepad);
     });
 
     update();
