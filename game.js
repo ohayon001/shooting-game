@@ -94,4 +94,3 @@ document.addEventListener('keypress', (e) => {
 });
 
 update();
-
