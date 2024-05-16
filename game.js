@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const enemySpeed = 2;
     const bulletSpeed = 7;
 
+    const backgroundMusic = document.getElementById('backgroundMusic');
+    backgroundMusic.play();
+
     function drawShip() {
         ctx.fillStyle = 'white';
         ctx.fillRect(ship.x, ship.y, ship.width, ship.height);
@@ -115,6 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ship.dy = -ship.speed;
         } else if (e.key === 's' || e.key === 'S') {
             ship.dy = ship.speed;
+        } else if (e.key === ' ') {
+            shooting = true;
         }
     }
 
@@ -123,6 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ship.dx = 0;
         } else if (e.key === 'w' || e.key === 'W' || e.key === 's' || e.key === 'S') {
             ship.dy = 0;
+        } else if (e.key === ' ') {
+            shooting = false;
         }
     }
 
@@ -157,8 +164,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ship.dx = leftStickX * ship.speed;
             ship.dy = leftStickY * ship.speed;
 
-            // ボタンの入力をチェック (ここではボタン0を射撃に対応させる)
-            if (gamepad.buttons[0].pressed) {
+            // Xボタンの入力をチェック (通常はボタン2)
+            if (gamepad.buttons[2].pressed) {
                 if (!shooting) {
                     shoot();
                     shooting = true;
@@ -173,11 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('keydown', keyDown);
     document.addEventListener('keyup', keyUp);
-    document.addEventListener('keypress', (e) => {
-        if (e.key === ' ') {
-            shoot();
-        }
-    });
 
     window.addEventListener('gamepadconnected', (e) => {
         console.log('ゲームパッドが接続されました:', e.gamepad);
