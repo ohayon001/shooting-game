@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const bullets = [];
+    let shooting = false;
 
     function drawShip() {
         ctx.fillStyle = 'white';
@@ -91,7 +92,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ゲームパッドのボタンとスティックをチェックする関数
     function checkGamepad() {
-        const gamepad = navigator.getGamepads()[0];
+        const gamepads = navigator.getGamepads();
+        const gamepad = gamepads[0];
         if (gamepad) {
             // 左スティックの入力をチェック
             const leftStickX = gamepad.axes[0];
@@ -123,7 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    let shooting = false;
     window.addEventListener('gamepadconnected', (e) => {
         console.log('ゲームパッドが接続されました:', e.gamepad);
     });
