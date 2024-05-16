@@ -102,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
         moveBullets();
         moveEnemies();
         detectCollisions();
+        checkGamepad();
         requestAnimationFrame(update);
     }
 
@@ -146,7 +147,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    setInterval(spawnEnemy, 1000);
+    function checkGamepad() {
+        const gamepads = navigator.getGamepads();
+        const gamepad = gamepads[0];
+        if (gamepad) {
+            // 左スティックの入力をチェック
+            const leftStickX = gamepad.axes[0];
+            const leftStickY = gamepad.axes[1];
+            ship.dx = leftStickX * ship.speed;
+            ship.dy = leftStickY * ship.speed;
+
+            // ボタンの入力をチェック (ここではボタン0を射撃に対応させる)
+            if (gamepad.buttons[0].pressed) {
+                if (!shooting) {
+                    shoot();
+                    shooting = true;
+                }
+            } else {
+                shooting = false;
+            }
+        }
+    }
+
+    let shooting = false;
 
     document.addEventListener('keydown', keyDown);
     document.addEventListener('keyup', keyUp);
@@ -155,6 +178,16 @@ document.addEventListener('DOMContentLoaded', () => {
             shoot();
         }
     });
+
+    window.addEventListener('gamepadconnected', (e) => {
+        console.log('ゲームパッドが接続されました:', e.gamepad);
+    });
+
+    window.addEventListener('gamepaddisconnected', (e) => {
+        console.log('ゲームパッドが切断されました:', e.gamepad);
+    });
+
+    setInterval(spawnEnemy, 1000);
 
     update();
 });
